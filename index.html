@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en" manifest="manifest.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mustafa PS4 PS5 Exploit Host</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Tajawal:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0; min-height: 100vh;
+    background: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 50%, #0d1326 100%);
+    background-attachment: fixed;
+    color: #c8ced8;
+    font-family: 'Tajawal', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 40px 50px;
+    max-width: 750px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 100, 255, 0.05);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .container:hover {
+    border-color: rgba(100, 150, 255, 0.3);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 60px rgba(0, 100, 255, 0.1);
+  }
+
+  .main-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    text-shadow: 0 0 30px rgba(0, 100, 255, 0.2);
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+  }
+
+  .highlight {
+    background: linear-gradient(135deg, #ff6b35, #ff2e63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 40px rgba(255, 46, 99, 0.3);
+  }
+
+  .ps4-text {
+    background: linear-gradient(135deg, #0066ff, #00ccff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ps5-text {
+    background: linear-gradient(135deg, #ff0066, #ff33cc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: #8899bb;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    margin-top: -5px;
+  }
+
+  .version-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff6b35, #ff2e63);
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 15px;
+    border-radius: 20px;
+    margin-top: 10px;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 46, 99, 0.3);
+  }
+
+  .separator {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    margin: 20px 0;
+  }
+
+  /* ===== قسم حالة الكاش ===== */
+  #cacheStatus {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: left;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  #cacheStatus .label { color: #556688; }
+  #cacheStatus .value { color: #47c76a; font-weight: 700; }
+  #cacheStatus .value.loading { color: #ebcb8b; }
+  #cacheStatus .value.error { color: #ff2e63; }
+  #cacheStatus .value.offline { color: #ff6b35; }
+
+  .cache-progress {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    margin: 8px 0;
+    overflow: hidden;
+  }
+
+  .cache-progress .bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff2e63, #ff6b35);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .cache-progress .bar.complete {
+    background: linear-gradient(90deg, #47c76a, #2a9d4a);
+  }
+
+  .cache-progress .bar.error {
+    background: linear-gradient(90deg, #ff2e63, #b01a3f);
+  }
+
+  /* ===== أزرار ===== */
+  #actions {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #ff2e63, #ff6b35);
+    color: white;
+    width: 100%;
+    max-width: 400px;
+    height: 56px;
+    padding: 0 25px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(255, 46, 99, 0.3);
+    margin: 5px auto;
+  }
+
+  .action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: all 0.5s ease;
+  }
+
+  .action:hover::before { left: 100%; }
+  .action:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 35px rgba(255, 46, 99, 0.5);
+  }
+
+  .action:active { transform: translateY(0px) scale(0.98); }
+
+  .btn-cache {
+    background: linear-gradient(135deg, #003263, #004a8f) !important;
+    max-width: 200px !important;
+    height: 40px !important;
+    font-size: 12px !important;
+  }
+
+  .btn-cache:hover {
+    background: linear-gradient(135deg, #004a8f, #0066cc) !important;
+  }
+
+  #status {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #8899bb;
+    letter-spacing: 1px;
+    margin: 20px 0;
+    min-height: 1.5em;
+    transition: all 0.3s ease;
+  }
+
+  #status.success { color: #47c76a; }
+  #status.error { color: #ff2e63; }
+  #status.loading { color: #ebcb8b; }
+
+  footer {
+    margin-top: 25px;
+  }
+
+  .credit {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    color: #556688;
+    letter-spacing: 2px;
+  }
+
+  .credit-link {
+    background: linear-gradient(135deg, #ff6b35, #ff2e63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .credit-link:hover {
+    text-shadow: 0 0 30px rgba(255, 46, 99, 0.4);
+  }
+
+  .thanks {
+    font-size: 13px;
+    color: #6688aa;
+    margin-top: 10px;
+    letter-spacing: 1px;
+    line-height: 1.8;
+  }
+
+  .thanks .heart { color: #ff2e63; }
+  .thanks .devs { color: #47c76a; font-weight: 700; }
+
+  .offline-banner {
+    display: none;
+    background: rgba(255, 46, 99, 0.15);
+    border: 1px solid #ff2e63;
+    border-radius: 12px;
+    padding: 10px 20px;
+    margin: 10px 0;
+    color: #ff6473;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .offline-banner.show { display: block; }
+  .offline-banner.success {
+    border-color: #47c76a;
+    color: #47c76a;
+    background: rgba(71, 199, 106, 0.15);
+  }
+  .offline-banner.loading {
+    border-color: #ebcb8b;
+    color: #ebcb8b;
+    background: rgba(235, 203, 139, 0.15);
+  }
+  .offline-banner.error {
+    border-color: #ff2e63;
+    color: #ff2e63;
+    background: rgba(255, 46, 99, 0.15);
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 25px 20px; border-radius: 20px; }
+    .main-title { font-size: 28px; }
+    .subtitle { font-size: 11px; letter-spacing: 5px; }
+    .action { font-size: 13px; height: 50px; padding: 0 15px; }
+    #status { font-size: 12px; }
+    .thanks { font-size: 11px; }
+    #cacheStatus { font-size: 11px; padding: 12px 15px; }
+  }
+
+  @media (max-width: 400px) {
+    .main-title { font-size: 22px; }
+    .action { font-size: 11px; height: 44px; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1 class="main-title">
+    <span class="highlight">Mustafa</span>
+    <span class="ps4-text">PS4</span>
+    <span class="ps5-text">PS5</span>
+  </h1>
+  <div class="subtitle">Exploit Host</div>
+  <div class="version-badge">✨ 9.00 – 12.00</div>
+
+  <hr class="separator">
+
+  <!-- ===== بنر حالة الكاش ===== -->
+  <div id="offlineBanner" class="offline-banner">⚠️ OFFLINE MODE — Some features may be limited</div>
+
+  <!-- ===== لوحة حالة الكاش ===== -->
+  <div id="cacheStatus">
+    <div><span class="label">📦 Cache Status:</span> <span id="cacheState" class="value">Checking...</span></div>
+    <div><span class="label">📄 Files Cached:</span> <span id="cacheFiles" class="value">0 / 65</span></div>
+    <div><span class="label">💾 Total Size:</span> <span id="cacheSize" class="value">0 KB</span></div>
+    <div><span class="label">📥 Download Progress:</span> <span id="cacheProgressText" class="value">0%</span></div>
+    <div class="cache-progress">
+      <div id="cacheProgressBar" class="bar" style="width: 0%;"></div>
+    </div>
+    <div style="margin-top:6px; font-size:11px; color:#445566;">
+      <span id="cacheDetail" style="color:#6688aa;">⏳ Waiting for cache...</span>
+    </div>
+  </div>
+
+  <div id="wrap">
+    <div id="actions">
+      <a id="start" class="action"
+         href="slopkit/poops.html?go=1&amp;auto=1&amp;production=1&amp;trigger=netcontrol&amp;attempts=8&amp;only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&amp;log=debug&amp;payload=1&amp;v=41"
+         tabindex="0">🚀 RUN EXPLOIT</a>
+
+      <button id="refreshCache" class="action btn-cache">🔄 Refresh Cache</button>
+    </div>
+    <div id="status">⏳ Ready</div>
+  </div>
+
+  <footer>
+    <p class="credit">Designed by <a href="#" class="credit-link">Mustafa</a></p>
+    <p class="thanks">
+      <span class="heart">❤️</span> Special thanks to all 
+      <span class="devs">scene developers</span> who made this possible
+    </p>
+  </footer>
+</div>
+
+<script>
+// ============================================================
+//  نظام عرض حالة الكاش (Cache Status Display)
+// ============================================================
+(function() {
+    'use strict';
+
+    // ===== عناصر الواجهة =====
+    var elements = {
+        banner: document.getElementById('offlineBanner'),
+        status: document.getElementById('status'),
+        cacheState: document.getElementById('cacheState'),
+        cacheFiles: document.getElementById('cacheFiles'),
+        cacheSize: document.getElementById('cacheSize'),
+        cacheProgressText: document.getElementById('cacheProgressText'),
+        cacheProgressBar: document.getElementById('cacheProgressBar'),
+        cacheDetail: document.getElementById('cacheDetail'),
+    };
+
+    var totalFiles = 65;
+    var loadedFiles = 0;
+    var totalSize = 0;
+    var cacheError = false;
+    var errorMessage = '';
+
+    // ===== دالة تحديث حالة الكاش =====
+    function updateCacheDisplay(state, detail) {
+        var stateMap = {
+            'checking': { text: '⏳ Checking...', cls: 'loading' },
+            'downloading': { text: '📥 Downloading...', cls: 'loading' },
+            'cached': { text: '✅ Cached (Offline Ready)', cls: '' },
+            'updateready': { text: '🔄 Update Ready', cls: 'loading' },
+            'error': { text: '❌ Error', cls: 'error' },
+            'offline': { text: '📡 Offline Mode', cls: 'offline' },
+            'noupdate': { text: '✅ Up to Date', cls: '' },
+            'obsolete': { text: '⚠️ Obsolete — Refresh', cls: 'error' },
+            'idle': { text: '⏳ Idle', cls: '' },
+        };
+
+        var info = stateMap[state] || stateMap['idle'];
+        elements.cacheState.textContent = info.text;
+        elements.cacheState.className = 'value ' + info.cls;
+
+        if (detail) {
+            elements.cacheDetail.textContent = detail;
+        }
+
+        // تحديث البنر
+        var banner = elements.banner;
+        if (state === 'offline') {
+            banner.textContent = '📡 OFFLINE MODE — Files are cached and ready';
+            banner.className = 'offline-banner show';
+        } else if (state === 'cached' || state === 'noupdate') {
+            banner.textContent = '✅ Cached successfully — Ready for offline use';
+            banner.className = 'offline-banner show success';
+            setTimeout(function() {
+                if (navigator.onLine) {
+                    banner.className = 'offline-banner';
+                }
+            }, 5000);
+        } else if (state === 'downloading') {
+            banner.textContent = '📥 Downloading files... Please wait';
+            banner.className = 'offline-banner show loading';
+        } else if (state === 'error' || state === 'obsolete') {
+            banner.textContent = '❌ Cache error — Check console';
+            banner.className = 'offline-banner show error';
+        }
+    }
+
+    // ===== دالة تحديث التقدم =====
+    function updateProgress(loaded, total, size) {
+        if (total > 0) {
+            var pct = Math.min(Math.round((loaded / total) * 100), 100);
+            elements.cacheProgressText.textContent = pct + '%';
+            elements.cacheProgressBar.style.width = pct + '%';
+            if (pct >= 100) {
+                elements.cacheProgressBar.className = 'bar complete';
+            } else if (cacheError) {
+                elements.cacheProgressBar.className = 'bar error';
+            }
+        }
+        if (loaded > 0) {
+            elements.cacheFiles.textContent = loaded + ' / ' + totalFiles;
+        }
+        if (size) {
+            var sizeStr = size < 1024 ? size + ' KB' : (size / 1024).toFixed(1) + ' MB';
+            elements.cacheSize.textContent = sizeStr;
+        }
+    }
+
+    // ===== دالة عرض الخطأ =====
+    function showError(msg) {
+        cacheError = true;
+        errorMessage = msg;
+        updateCacheDisplay('error', '❌ ' + msg);
+        elements.status.textContent = '❌ ' + msg;
+        elements.status.className = 'error';
+        elements.cacheProgressBar.className = 'bar error';
+        console.error('Cache Error:', msg);
+    }
+
+    // ===== تهيئة مراقبة الـ AppCache =====
+    function initCacheMonitor() {
+        if (!window.applicationCache) {
+            showError('AppCache not supported');
+            return;
+        }
+
+        var cache = window.applicationCache;
+        console.log('📦 AppCache is supported');
+
+        // ===== أحداث الـ AppCache =====
+        cache.addEventListener('checking', function() {
+            console.log('🔄 Checking for updates...');
+            updateCacheDisplay('checking', '⏳ Checking for updates...');
+            elements.status.textContent = '⏳ Checking cache...';
+            elements.status.className = 'loading';
+            cacheError = false;
+        });
+
+        cache.addEventListener('downloading', function(e) {
+            console.log('📥 Downloading files...');
+            updateCacheDisplay('downloading', '📥 Downloading files...');
+            elements.status.textContent = '📥 Downloading...';
+            elements.status.className = 'loading';
+            loadedFiles = 0;
+            updateProgress(0, totalFiles, 0);
+            cacheError = false;
+        });
+
+        cache.addEventListener('progress', function(e) {
+            if (e.total) {
+                loadedFiles = Math.round((e.loaded / e.total) * totalFiles);
+                var estSize = Math.round((e.loaded / e.total) * 2048);
+                updateProgress(loadedFiles, totalFiles, estSize);
+                console.log('📥 Progress:', loadedFiles + '/' + totalFiles + ' (' + Math.round(e.loaded/e.total*100) + '%)');
+            }
+        });
+
+        cache.addEventListener('cached', function() {
+            console.log('✅ Files cached successfully!');
+            updateCacheDisplay('cached', '✅ All 65 files cached successfully!');
+            elements.status.textContent = '✅ Ready (Offline)';
+            elements.status.className = 'success';
+            updateProgress(totalFiles, totalFiles, 2048);
+            elements.cacheFiles.textContent = totalFiles + ' / ' + totalFiles;
+            elements.cacheSize.textContent = '~2.0 MB';
+            elements.cacheProgressBar.className = 'bar complete';
+        });
+
+        cache.addEventListener('updateready', function() {
+            if (cache.status === cache.UPDATEREADY) {
+                console.log('🔄 Update ready');
+                updateCacheDisplay('updateready', '🔄 New version available!');
+                elements.status.textContent = '🔄 Update ready';
+                elements.status.className = 'loading';
+                if (confirm('📦 New version available. Reload to apply?')) {
+                    try {
+                        cache.swapCache();
+                        location.reload();
+                    } catch(e) {
+                        showError('Swap cache failed: ' + e.message);
+                    }
+                }
+            }
+        });
+
+        cache.addEventListener('noupdate', function() {
+            console.log('✅ No update needed');
+            updateCacheDisplay('noupdate', '✅ Cache is up to date');
+            elements.status.textContent = '✅ Up to date';
+            elements.status.className = 'success';
+            updateProgress(totalFiles, totalFiles, 2048);
+            elements.cacheFiles.textContent = totalFiles + ' / ' + totalFiles;
+            elements.cacheSize.textContent = '~2.0 MB';
+            elements.cacheProgressBar.className = 'bar complete';
+        });
+
+        cache.addEventListener('error', function(e) {
+            console.log('❌ Cache error:', e);
+            if (!cacheError) {
+                showError('Cache download failed. Check console.');
+            }
+        });
+
+        cache.addEventListener('obsolete', function() {
+            console.log('⚠️ Cache obsolete');
+            showError('Cache is obsolete — Refresh needed');
+        });
+
+        cache.addEventListener('offline', function() {
+            console.log('⚠️ Offline mode');
+            updateCacheDisplay('offline', '📡 Working in offline mode');
+            elements.status.textContent = '📡 Offline mode';
+            elements.status.className = '';
+        });
+
+        // ===== التحقق من الحالة الحالية =====
+        var statusMap = {
+            0: 'idle',
+            1: 'checking',
+            2: 'downloading',
+            3: 'noupdate',
+            4: 'cached',
+            5: 'updateready',
+            6: 'obsolete',
+            7: 'error',
+        };
+        var currentStatus = statusMap[cache.status] || 'idle';
+        if (cache.status === 2) {
+            updateCacheDisplay('downloading', '⏳ Downloading in progress...');
+        } else {
+            updateCacheDisplay(currentStatus, 'Status: ' + currentStatus);
+        }
+    }
+
+    // ===== زر تحديث الكاش =====
+    document.getElementById('refreshCache').addEventListener('click', function() {
+        if (window.applicationCache) {
+            try {
+                cacheError = false;
+                window.applicationCache.update();
+                updateCacheDisplay('checking', '⏳ Checking for updates...');
+                elements.status.textContent = '🔄 Checking for updates...';
+                elements.status.className = 'loading';
+                elements.cacheProgressBar.className = 'bar';
+                alert('⏳ Checking for updates...\n\nIf this fails, try clearing browser cache manually.');
+            } catch(e) {
+                showError('Update failed: ' + e.message);
+            }
+        } else {
+            alert('❌ AppCache is not supported in this browser');
+        }
+    });
+
+    // ===== مراقبة حالة الاتصال =====
+    function updateOnlineStatus() {
+        if (navigator.onLine) {
+            if (elements.banner.className.includes('offline-banner show') && 
+                !elements.banner.className.includes('success') &&
+                !elements.banner.className.includes('loading') &&
+                !elements.banner.className.includes('error')) {
+                elements.banner.className = 'offline-banner';
+            }
+        } else {
+            elements.banner.textContent = '📡 OFFLINE MODE — Files are cached';
+            elements.banner.className = 'offline-banner show';
+        }
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+
+    // ===== بدء مراقبة الكاش =====
+    initCacheMonitor();
+
+    // ===== تركيز على الزر =====
+    try {
+        document.getElementById('start').focus();
+    } catch(e) {}
+
+    // ===== تحديث أولي بعد 2 ثانية =====
+    setTimeout(function() {
+        if (window.applicationCache) {
+            var statusMap = ['idle', 'checking', 'downloading', 'noupdate', 'cached', 'updateready', 'obsolete', 'error'];
+            var st = statusMap[window.applicationCache.status] || 'idle';
+            if (st === 'cached' || st === 'noupdate') {
+                updateCacheDisplay(st, '✅ Cache ready');
+                elements.cacheFiles.textContent = totalFiles + ' / ' + totalFiles;
+                elements.cacheSize.textContent = '~2.0 MB';
+                updateProgress(totalFiles, totalFiles, 2048);
+                elements.cacheProgressBar.className = 'bar complete';
+            } else if (st === 'downloading') {
+                elements.cacheFiles.textContent = 'Loading...';
+            }
+        }
+    }, 2000);
+
+    console.log('🔍 AppCache Monitor initialized');
+    console.log('📊 Cache status:', window.applicationCache ? window.applicationCache.status : 'N/A');
+    console.log('📄 Total files expected:', totalFiles);
+})();
+</script>
+
+</body>
+</html>
